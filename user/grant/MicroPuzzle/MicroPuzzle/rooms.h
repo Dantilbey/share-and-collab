@@ -5,7 +5,6 @@ class room
 private:
 	std::string id;
 	std::string description;
-	std::string itemId;
 
 
 	//neighbor room ids
@@ -22,13 +21,27 @@ public:
 	item item1;
 
 	//methods
+	//defualt constructor
 	room(std::string Id = "NULL");
-	room(std::string Id, std::string description = "-NO DESCRIPTION-", std::string nn = "NULL", std::string en = "NULL", std::string sn = "NULL", std::string wn = "NULL", std::string itemID = "NULL", std::string objectName = "NULL", std::string objectDescription = "NULL");
+	
+	//constructor
+	room(std::string Id, std::string description = "-NO DESCRIPTION-", std::string nn = "NULL", std::string en = "NULL", std::string sn = "NULL", std::string wn = "NULL", std::string objectName = "NULL", std::string objectDescription = "NULL");
+	
+	//print the room and item if it contains one
 	void printRoom(std::string defualtMessage = "-NO MESSAGE-", std::string itemName = "NULL"); // print description and any items in the room
-	void findDirections(); // print the avaliable directions
-	std::string getNeighbor(std::string direction);
+	
+	 // print the avaliable directions
+	void findDirections();
+	
+	//get the neighbor of the room based on which direction the user has chosen
+	std::string getNeighbor(std::string direction, std::string word2 = "NULL");
+	
+	//return the unique id of the room
 	std::string getID();
-	std::string getItemId();
+
+	//add an item to the room
 	void addItem(std::string itemName);
+	
+	//remove the current item from the room
 	void removeItem();
 };

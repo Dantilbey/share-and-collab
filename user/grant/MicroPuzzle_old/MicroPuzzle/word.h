@@ -4,9 +4,7 @@ private:
 	std::string name;
 
 public:
-	//defualt constructor
+	//word();
 	word(std::string Name = "NULL");
-	
-	//return the name of the word
 	std::string getName();
 };

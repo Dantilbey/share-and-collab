@@ -8,18 +8,14 @@ int const NUMOFROOMS = 19;
 int const NUMOFITEMS = 15;
 int const NUMOFVERBS = 12;
 
-//used to delcare how many params per room and item are stored in file
-int const PARAMSPERROOM = 8;
-int const PARAMSPERITEM = 2;
-
 void gameStart();
 
 void loadData();
 //loads in all of data for the rooms from file
-bool loadRooms(int roomArrayNum);
+void loadRooms(int roomArrayNum);
 
 //load in items from file
-bool loadItems(int itemArrayNum);
+void loadItems(int itemArrayNum);
 
 //finding the room array number from the id
 int roomLookup(std::string roomId);
@@ -46,24 +42,16 @@ bool validateInput(std::string choice);
 //deal with input if the first word was a verb
 std::string verb(int currentRoom);
 
-//functions for actions all returns a result as a message to be printed
+//functions for actions
 std::string take(int currentRoom);
 std::string eat(int currentRoom);
 std::string examine(int currentRoom);
-std::string go(int currentRoom);
 
 //strings for seperating words
 std::string word1 = "";
 std::string word2 = "";
 	
-//create file stream
 std::ifstream file;
-
-//store id of current room
-std::string currentRoomId;
-
-//store the array number of the current room
-int currentRoom;
 
 
 //inventory
@@ -95,19 +83,13 @@ void loadData()
 	
 	//LOAD ROOMS FROM FILE
 	file.open("rooms.txt");
-	std::string findStart;
-	//skip over comment lines in text files
-	while(true)
-	{
-		getline(file, findStart);
-		if(findStart == "::BEGIN")
-		{
-			break;
-		}
-	}
 	for(int i = 0; i<NUMOFROOMS; i++)
 	{
-		if(!loadRooms(i))
+		if(!file.eof())
+		{
+			loadRooms(i);
+		}
+		else
 		{
 			break;
 		}
@@ -125,147 +107,87 @@ void loadData()
 	word verb3("EXAMINE");
 	verbs[2] = verb3;
 
-	word verb4("GO");
-	verbs[3] = verb4;
-
 	//LOAD ITEMS
 	file.open("items.txt");
-	//std::string tmpId;
-	//skip over comment lines in text files
-	while(true)
-	{
-		getline(file, findStart);
-		if(findStart == "::BEGIN")
-		{
-			break;
-		}
-	}
+	std::string tmpId;
 	for(int i = 0; i<NUMOFITEMS; i++)
 	{
-		if(!loadItems(i))
+		if(!file.eof())
 		{
-			break;
+			loadItems(i);
+
+			//put the item into the correct room
+			rooms[roomLookup(items[i].getRoomId())].addItem(items[i].getName());
+
 		}
 		else
 		{
-			//put the item into the correct room
-			rooms[roomLookup(items[i].getRoomId())].addItem(items[i].getName());
+			break;
 		}
 	}
 	file.close();
 	
 }
 
-bool loadItems(int itemArrayNum)
+void loadItems(int itemArrayNum)
 {
 	//create strings to hold data temporarily
-	std::string data[PARAMSPERITEM];
-
-	//used to check the file for a comment line
-	std::string commentChecker;
-
+	std::string data[2];
+	
 	//load data from file
-	for(int i = 0; i<PARAMSPERITEM;i++)
+	for(int i = 0; i<2;i++)
 	{
 		data[i] == "NULL";
-		getline(file, commentChecker);
-		//if the end of the file has been reached
-		if(commentChecker != "::END")
+		getline(file, data[i]);
+		if(data[i] == ".")
 		{
-			//test if the line is empty
-			if(commentChecker != "")
-			{
-				//test if the line is a comment
-				if(commentChecker[0] == '/' && commentChecker[1] == '/')
-				{
-					//ignore the line
-					i--;
-				}
-				else
-				{
-					data[i] = commentChecker;
-					if(data[i] == ".")
-					{
-						data[i] = "NULL";
-						break;
-					}
-				}
-			}
-			else
-			{
-				//ignore the line
-				i--;
-			}
-		}
-		else
-		{
-			//return false to signify end of file
-			return false;
+			data[i] = "NULL";
+			break;
 		}
 	}
 	//create temporary room to hold data
 	item tmpItem(data[0], data[1]);
 	items[itemArrayNum] = tmpItem;
-	return true;
+
+	std::string ignore;
+	getline(file, ignore);
 }
 
-bool loadRooms(int roomArrayNum)
+void loadRooms(int roomArrayNum)
 {
 	//create strings to hold data temporarily
-	std::string data[PARAMSPERROOM];
-
-	//used to check the file for a comment line
-	std::string commentChecker;
+	std::string data[9];
 	
 	//load data from file
-	for(int i = 0; i<PARAMSPERROOM;i++)
+	for(int i = 0; i<9;i++)
 	{
 		data[i] = "NULL";
-		getline(file, commentChecker);
-		//if the end of the file has been reached
-		if(commentChecker != "::END")
+		getline(file, data[i]);
+		if(data[i] == ".")
 		{
-			if(commentChecker != "")
+			for(int x = i; x < 9;x++)
 			{
-				//test if the line is a comment
-				if(commentChecker[0] == '/' && commentChecker[1] == '/')
-				{
-					//ignore the line
-					i--;
-				}
-				else
-				{
-					data[i] = commentChecker;
-					if(data[i] == ".")
-					{
-						for(int x = i; x < PARAMSPERROOM;x++)
-						{
-							data[x] = "NULL";
-						}
-						break;
-					}
-				}
+				data[x] = "NULL";
 			}
-			else
-			{
-				//ignore the line
-				i--;
-			}
-		}
-		else
-		{
-			return false;
+			break;
 		}
 	}
 	//create temporary room to hold data
-	room tmpRoom(data[0], data[1], data[2], data[3], data[4], data[5], data[6], data[7]);
+	room tmpRoom(data[0], data[1], data[2], data[3], data[4], data[5], data[6], data[7], data[8]);
 	rooms[roomArrayNum] = tmpRoom;
-	return true;
+
+	std::string ignore;
+	getline(file, ignore);
 }
 
 void gameStart()
 {
-	//id of the current room
+
+	//store id of current room
+	std::string currentRoomId;
+	//store the array number of the current room
+	int currentRoom;
+	//set the starting room
 	currentRoomId = startingRoom;
 
 	//setup variables to hold both words
@@ -310,7 +232,7 @@ void gameStart()
 				//test for room move
 				if(choice == "N" || choice == "E" || choice == "S" || choice == "W")
 				{
-					//retrieves the neighboring room id, if the id is "NULL" then there is no neighbor avaliable
+					//retrieves the neighboring room id, if the id is "NULL" then there is no neighbor avalialbe
 					newRoom = rooms[currentRoom].getNeighbor(choice);
 					if(newRoom != "NULL")
 					{
@@ -447,37 +369,12 @@ std::string verb(int currentRoom)
 			return "NOTHING OF INTEREST";
 		}
 	}
-	else if(word1 == "GO")
-	{
-		if(word2 != "")
-		{
-			return go(currentRoom);
-		}
-		else
-		{
-			return "GO WHERE?";
-		}
-	}
-	else
+	else 
 	{
 		return "YOU DO NOT MAKE SENSE";
 	}
 }
 
-std::string go(int currentRoom)
-{
-	//retrieves the neighboring room id, if the id is "NULL" then there is no neighbor avaliable
-	std::string newRoom = rooms[currentRoom].getNeighbor("NULL", word2);
-	if(newRoom != "NULL")
-	{
-		currentRoomId = newRoom;
-		return "OK";
-	}
-	else
-	{
-		return "YOU CANNOT GO THAT WAY";
-	}
-}
 std::string examine(int currentRoom)
 {
 	if(rooms[currentRoom].object1.getName() == word2)
@@ -517,7 +414,7 @@ std::string eat(int currentRoom)
 	//if the player has the item and they typed the name
 	for(int i = 0; i< NUMOFITEMS; i++)
 	{
-		if("CHEESE" == items[i].getName() && word2 == items[i].getName() && items[i].getOwned() == true)
+		if("CHEESE" == items[i].getName() && word2 == "CHEESE" && items[i].getOwned() == true)
 		{
 			items[i].consume();
 			return "MUNCH CHOMP";

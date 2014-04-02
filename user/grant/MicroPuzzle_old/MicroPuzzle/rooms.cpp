@@ -1,10 +1,10 @@
 #include "main.h"
 #include "rooms.h"
 
-room::room(std::string Id, std::string Description, std::string Nn, std::string En, std::string Sn, std::string Wn,  std::string objectName, std::string objectDescription):
+room::room(std::string Id, std::string Description, std::string Nn, std::string En, std::string Sn, std::string Wn, std::string ItemID,  std::string objectName, std::string objectDescription):
 	id(Id),
 	description(Description),
-	//itemId(ItemID),
+	itemId(ItemID),
 	northNeighbor(Nn),
 	eastNeighbor(En),
 	southNeighbor(Sn),
@@ -21,7 +21,7 @@ room::room(std::string Id):
 	eastNeighbor = "NULL";
 	southNeighbor = "NULL";
 	westNeighbor = "NULL";
-	//itemId = "NULL";
+	itemId = "NULL";
 }
 
 
@@ -71,27 +71,27 @@ void room::findDirections()
 	std::cout << std::endl;
 }
 
-std::string room::getNeighbor(std::string direction, std::string word2)
+std::string room::getNeighbor(std::string direction)
 {
-	if(direction == "N" || word2 == "NORTH")
+	if(direction == "N")
 	{
 		return northNeighbor;
 	}
 	else
 	{
-		if(direction == "E" || word2 == "EAST")
+		if(direction == "E")
 		{
 			return eastNeighbor;
 		}
 		else
 		{
-			if(direction == "S" || word2 == "SOUTH")
+			if(direction == "S")
 			{
 				return southNeighbor;
 			}
 			else
 			{
-				if(direction == "W" || word2 == "WEST")
+				if(direction == "W")
 				{
 					return westNeighbor;
 				}
@@ -107,6 +107,11 @@ std::string room::getNeighbor(std::string direction, std::string word2)
 std::string room::getID()
 {
 	return id;
+}
+
+std::string room::getItemId()
+{
+	return itemId;
 }
 
 void room::addItem(std::string itemName)

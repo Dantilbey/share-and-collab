@@ -1,7 +1,13 @@
-001
+//param list items: roomId, name
+//roomId: id of the room that the item belongs to
+//name: name of the item
+
+::BEGIN
+002
+//twat
 THREAD
 
-002
+001
 CHEESE
 
 003
@@ -9,3 +15,4 @@ SWORD
 
 004
 DILDO
+::END

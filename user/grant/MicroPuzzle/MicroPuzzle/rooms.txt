@@ -1,3 +1,12 @@
+//param list rooms: id, description, nn, ne, ns, nw, object(examinable), objectText
+//id: id of room
+//descripton: text that is printed out when in room
+//nn, ne, ns and nw: the connecting rooms north, east, south, west (ensure that when you connect a room that you also make the connection mutual so that it is not one way)
+//object: name of object in room that can be examined
+//objectText: text that is desplayed when the object is examined
+//type '.' on the final line if you do not enter all required params
+
+::BEGIN
 001
 ROOM 1
 002
@@ -6,10 +15,10 @@ ROOM 1
 002
 IN THIS ROOM SITS A VERY HOT ASIAN GIRL
 NULL
+//THIS WILL NOT BE READ
 003
 001
 NULL
-101
 ASIAN
 SHE IS DRIPPING WET
 
@@ -19,16 +28,26 @@ ROOM3
 NULL
 NULL
 002
-102
 .
 
 004
-YOU ARE STADING IN A SMALL ROOM
-NULL
-NULL
+YOU ARE STADING IN A SMALL ROOM, THERE IS ALSO A SEX DUMMY HERE
+005
+006
 003
 NULL
-104
 SEX DUMMY
-YOU CAN SEE THAT IT HAS RECENTLY BEEN USED
+YOU CAN SEE THAT IT HAS RECENTLY BEEN USED BY THE ASIAN
 
+005
+BOXING RING, YOU WILL BE STUCK HERE FOREVER, WHUAA, HA, HA. APOLLO CREED IS HERE
+NULL
+NULL
+NULL
+NULL
+APOLLO CREED
+HE'S GOING TO BEAT THE SHIT OUT OF YOU
+
+006
+.
+::END
